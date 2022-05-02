@@ -1,5 +1,7 @@
 # GCP Basic Setup
 
+## Preliminary Setup
+
 To start, we're just spinning up a VPC and some VMs. To use this file with pre-existing secrets, run:
 
 ```console
@@ -13,3 +15,7 @@ Of course, if you're not me, or just don't have access to my secrets, the above 
 ```yaml
 project: foo-bar-baz-google-project-id
 ```
+
+## Usage
+
+To deploy the resources defined in this folder, run `terraform apply`.
