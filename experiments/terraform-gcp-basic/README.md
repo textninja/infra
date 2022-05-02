@@ -1,5 +1,7 @@
 # GCP Basic Setup
 
+This contains the very basics for infrastructure as code on Google Cloud Platform.
+
 ## Preliminary Setup
 
 To start, we're just spinning up a VPC and some VMs. To use this file with pre-existing secrets, run:
