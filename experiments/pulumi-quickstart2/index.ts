@@ -21,3 +21,7 @@ const frontend = new docker.Image('frontend', {
   imageName: `${frontendImageName}:${stack}`,
   skipPush: true
 });
+
+const mongoImage = new docker.RemoteImage('mongo', {
+  name: 'mongo:bionic'
+});
