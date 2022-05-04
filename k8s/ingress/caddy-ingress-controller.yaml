@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-proxy
+  namespace: default
+  labels:
+    app: ingress-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress-proxy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ingress-proxy
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      nodeSelector:
+        cloud.google.com/gke-nodepool: ingress-pool
+      tolerations: 
+        - key: dedicated
+          operator: Equal
+          value: ingress
+          effect: NoSchedule
+      containers:
+        - name: ingress-proxy
+          image: 'caddy:2'
+          ports:
+            - name: https
+              containerPort: 443
+              hostPort: 443
+            - name: caddy-admin
+              containerPort: 2019
+              hostPort: 2019
+          volumeMounts:
+            - name: caddy-conf
+              mountPath: /etc/caddy
+              readOnly: true
+            - name: certs-volume
+              mountPath: /data
+          command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile", "--watch"]
+      volumes:
+        - name: caddy-conf
+          configMap:
+            name: ingress-proxy-caddy-conf
+        - name: certs-volume
+          gcePersistentDisk:
+            pdName: certs-disk
+            fsType: ext4
